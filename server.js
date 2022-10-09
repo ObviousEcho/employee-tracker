@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
+const cTable = require("console.table");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -21,17 +22,18 @@ const db = mysql.createConnection(
 
 const questions = [
   {
-    type: "list",
+    type: "rawlist",
     name: "view",
     message: "Please select an option.",
     choices: [
-      "view all departments",
-      "view all roles",
-      "view all employees",
-      "add a department",
-      "add a role",
-      "add an employee",
-      "update an employee role",
+      "View all departments",
+      "View all roles",
+      "View all employees",
+      "Add a department",
+      "Add a role",
+      "Add an employee",
+      "Update an employee role",
+      "Quit",
     ],
   },
 ];
@@ -39,7 +41,7 @@ const questions = [
 const department = [
   {
     type: "input",
-    name: "dept_name",
+    name: "deptName",
     message: "What department name would you like to add?",
   },
 ];
@@ -105,15 +107,51 @@ const employee = [
 ];
 
 app.listen(PORT, async () => {
-    console.log(`Server running on port ${PORT}`)
-    await askQuestions();   
+  console.log(`Server running on port ${PORT}\n`);
+  await askQuestions();
 });
 
 function askQuestions() {
   inquirer
     .prompt(questions)
     .then((answers) => {
-      console.log(answers);
+      switch (answers.view) {
+        case "View all departments":
+          viewAllDepts();
+          break;
+
+        case "View all roles":
+          viewAllRoles();
+          break;
+
+        case "View all employees":
+          viewAllEmployees();
+          break;
+
+        case "Add a department":
+          console.log("add a department");
+          addDepartment();
+          break;
+
+        case "Add a role":
+          console.log("add a role");
+          addRole();
+          break;
+
+        case "Add an employee":
+          console.log("add an employee");
+          addEmployee();
+          break;
+
+        case "Update an employee role":
+          console.log("update an employee");
+          updateEmployee();
+          break;
+
+        case "Quit":
+          askQuestions();
+          break;
+      }
     })
     .catch((error) => {
       console.error(error, `Something went wront!`);
@@ -164,3 +202,38 @@ function updateEmployee(value) {
     });
 }
 
+function viewAllDepts() {
+  const sql = `SELECT * FROM department`;
+
+  db.query(sql, (err, rows) => {
+    if (err) {
+      console.error(`${res.status(500)} Something went wrong!`);
+      return;
+    }
+    console.table('\nDepartments:', rows);
+  });
+}
+
+function viewAllRoles() {
+  const sql = `SELECT * FROM role`;
+
+  db.query(sql, (err, rows) => {
+    if (err) {
+      console.error(`${res.status(500)} Something went wrong!`);
+      return;
+    }
+    console.table('\nRoles:', rows);
+  });
+}
+
+function viewAllEmployees() {
+  const sql = `SELECT * FROM employee`;
+
+  db.query(sql, (err, rows) => {
+    if (err) {
+      console.error(`${res.status(500)} Something went wrong!`);
+      return;
+    }
+    console.table('\nEmployees:', rows);
+  });
+}

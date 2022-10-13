@@ -162,7 +162,7 @@ function addDepartment() {
   inquirer
     .prompt(department)
     .then((answers) => {
-      console.log(answers);
+      insertDept(answers.deptName);
     })
     .catch((error) => {
       console.error(error, `Something went wront!`);
@@ -174,6 +174,7 @@ function addRole() {
     .prompt(role)
     .then((answers) => {
       console.log(answers);
+      insertRole(answers.roleName, answers.salary, answers.department);
     })
     .catch((error) => {
       console.error(error, `Something went wront!`);
@@ -185,21 +186,56 @@ function addEmployee() {
     .prompt(employee)
     .then((answers) => {
       console.log(answers);
+      insertEmployee(
+        answers.firstName,
+        answers.lastName,
+        answers.role,
+        answers.managerId
+      );
     })
     .catch((error) => {
       console.error(error, `Something went wront!`);
     });
 }
 
-function updateEmployee(value) {
-  inquirer
-    .prompt(value)
-    .then((answers) => {
-      console.log(answers);
+function updateEmployee() {
+  const sql = `SELECT * FROM employee`;
+
+  db.query(sql, (err, res) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(res);
+    const nameArray = res.map(obj => {
+      return `${obj.first_name} ${obj.last_name}`;
     })
-    .catch((error) => {
-      console.error(error, `Something went wront!`);
-    });
+
+    const whichEmployee = [
+      {
+        type: 'rawlist',
+        name: 'empName',
+        message: 'Which employee would you like to update?',
+        choices: nameArray
+      },
+
+      {
+        type: 'input',
+        name: 'empRole',
+        message: "What is the employee's new role?"
+      }
+    ]
+    inquirer
+    .prompt(whichEmployee)
+    .then((answers) => {
+      const nameArr = answers.empName.split(" ");
+      const [fName, lName] = nameArr;
+      updateEmployeeAndRole(fName, lName, answers.empRole);
+      })
+      .catch((error) => {
+        console.error(error, `Something went wront!`);
+      });
+  });
 }
 
 function viewAllDepts() {
@@ -210,7 +246,7 @@ function viewAllDepts() {
       console.error(`${res.status(500)} Something went wrong!`);
       return;
     }
-    console.table('\nDepartments:', rows);
+    console.table("\nDepartments:", rows);
   });
 }
 
@@ -222,7 +258,7 @@ function viewAllRoles() {
       console.error(`${res.status(500)} Something went wrong!`);
       return;
     }
-    console.table('\nRoles:', rows);
+    console.table("\nRoles:", rows);
   });
 }
 
@@ -231,9 +267,61 @@ function viewAllEmployees() {
 
   db.query(sql, (err, rows) => {
     if (err) {
-      console.error(`${res.status(500)} Something went wrong!`);
+      console.error(err);
       return;
     }
-    console.table('\nEmployees:', rows);
+    console.table("\nEmployees:", rows);
+  });
+}
+
+function insertDept(dept) {
+  const sql = `INSERT INTO department (dept_name) VALUES (?)`;
+  const params = `${dept}`;
+
+  db.query(sql, params, (err, res) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log(`\n Department added successfully!`);
+  });
+}
+
+function insertRole(title, salary, dept) {
+  const sql = `INSERT INTO role (title, salary, department_id) VALUES [?]`;
+  const params = [title, salary, dept];
+
+  db.query(sql, params, (err, res) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log(`\n New role added successfully!`);
+  });
+}
+
+function insertEmployee(fName, lName, role, manager) {
+  const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?)`;
+  const params = `${fName} AND ${lName} AND ${role} AND ${manager}`;
+
+  db.query(sql, params, (err, res) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log(`\n New role added successfully!`);
+  });
+}
+
+function updateEmployeeAndRole(fName, lName, role) {
+  const sql = `UPDATE employee SET (?) WHERE first_name = ${fName} AND last_name = ${lName}`;
+  const params = `${role}`;
+
+  db.query(sql, params, (err, res) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log(`\n Employee updated successfully!`);
   });
 }

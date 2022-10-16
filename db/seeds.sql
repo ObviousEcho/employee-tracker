@@ -1,6 +1,6 @@
 INSERT INTO department (dept_name)
 VALUES  ("Engineering"),
-        ("Development"),
+        ("SoftWare Development"),
         ("Marketing"),
         ("Customer Service"),
         ("Human Rescources"),
@@ -15,15 +15,15 @@ VALUES  ("Engineer", 150000, 1),
         ("Rep", 100000, 6);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES  ("Mallory", "Feather", 1, 1),
-        ("Regan", "Sonderlund", 1, 2),
-        ("Alexander", "Dunfeld", 2, 3),
-        ("Myra", "Bates", 2, 4),
-        ("Duffy", "Bolinger", 3, 5),
-        ("Monique", "Reyes", 3, 6),
-        ("Elizabeth", "Smith", 4, 7),
-        ("Jessica", "Thomas", 4, 8),
-        ("Sadie", "Hill", 5, 9),
-        ("Layla", "North", 5, 10),
-        ("Marcus", "Brown", 6, 11),
-        ("Hilde", "Templeton", 6, 12);
+VALUES  ("Mallory", "Feather", 1, NULL),
+        ("Regan", "Sonderlund", 1, 1),
+        ("Alexander", "Dunfeld", 2, NULL),
+        ("Myra", "Bates", 2, 2),
+        ("Duffy", "Bolinger", 3, 1),
+        ("Monique", "Reyes", 3, 2),
+        ("Elizabeth", "Smith", 4, 1),
+        ("Jessica", "Thomas", 4, 2),
+        ("Sadie", "Hill", 5, 1),
+        ("Layla", "North", 5, 2),
+        ("Marcus", "Brown", 6, 1),
+        ("Hilde", "Templeton", 6, 2);

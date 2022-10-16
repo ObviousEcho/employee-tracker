@@ -207,30 +207,30 @@ function updateEmployee() {
       return;
     }
     console.log(res);
-    const nameArray = res.map(obj => {
+    const nameArray = res.map((obj) => {
       return `${obj.first_name} ${obj.last_name}`;
-    })
+    });
 
     const whichEmployee = [
       {
-        type: 'rawlist',
-        name: 'empName',
-        message: 'Which employee would you like to update?',
-        choices: nameArray
+        type: "rawlist",
+        name: "empName",
+        message: "Which employee would you like to update?",
+        choices: nameArray,
       },
 
       {
-        type: 'input',
-        name: 'empRole',
-        message: "What is the employee's new role?"
-      }
-    ]
+        type: "input",
+        name: "empRole",
+        message: "What is the employee's new role?",
+      },
+    ];
     inquirer
-    .prompt(whichEmployee)
-    .then((answers) => {
-      const nameArr = answers.empName.split(" ");
-      const [fName, lName] = nameArr;
-      updateEmployeeAndRole(fName, lName, answers.empRole);
+      .prompt(whichEmployee)
+      .then((answers) => {
+        const nameArr = answers.empName.split(" ");
+        const [fName, lName] = nameArr;
+        updateEmployeeAndRole(fName, lName, answers.empRole);
       })
       .catch((error) => {
         console.error(error, `Something went wront!`);
@@ -247,6 +247,7 @@ function viewAllDepts() {
       return;
     }
     console.table("\nDepartments:", rows);
+    askQuestions();
   });
 }
 
@@ -259,11 +260,15 @@ function viewAllRoles() {
       return;
     }
     console.table("\nRoles:", rows);
+    askQuestions();
   });
 }
 
 function viewAllEmployees() {
-  const sql = `SELECT * FROM employee`;
+  const sql = `SELECT first_name, last_name, title, dept_name, salary
+  FROM employee
+  JOIN role ON employee.role_id = role.id
+  JOIN department ON employee.role_id = department.id`;
 
   db.query(sql, (err, rows) => {
     if (err) {
@@ -271,6 +276,7 @@ function viewAllEmployees() {
       return;
     }
     console.table("\nEmployees:", rows);
+    askQuestions();
   });
 }
 
@@ -284,37 +290,40 @@ function insertDept(dept) {
       return;
     }
     console.log(`\n Department added successfully!`);
+    askQuestions();
   });
 }
 
 function insertRole(title, salary, dept) {
-  const sql = `INSERT INTO role (title, salary, department_id) VALUES [?]`;
+  const sql = `INSERT INTO role (title, salary, department_id) VALUES (?)`;
   const params = [title, salary, dept];
 
-  db.query(sql, params, (err, res) => {
+  db.query(sql, [params], (err, res) => {
     if (err) {
       console.log(err);
       return;
     }
     console.log(`\n New role added successfully!`);
+    askQuestions();
   });
 }
 
 function insertEmployee(fName, lName, role, manager) {
   const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?)`;
-  const params = `${fName} AND ${lName} AND ${role} AND ${manager}`;
+  const params = [fName, lName, role, manager];
 
-  db.query(sql, params, (err, res) => {
+  db.query(sql, [params], (err, res) => {
     if (err) {
       console.log(err);
       return;
     }
     console.log(`\n New role added successfully!`);
+    askQuestions();
   });
 }
 
 function updateEmployeeAndRole(fName, lName, role) {
-  const sql = `UPDATE employee SET (?) WHERE first_name = ${fName} AND last_name = ${lName}`;
+  const sql = `UPDATE employee SET role_id = (?) WHERE first_name = ${fName} AND last_name = ${lName}`;
   const params = `${role}`;
 
   db.query(sql, params, (err, res) => {
@@ -323,5 +332,6 @@ function updateEmployeeAndRole(fName, lName, role) {
       return;
     }
     console.log(`\n Employee updated successfully!`);
+    askQuestions();
   });
 }

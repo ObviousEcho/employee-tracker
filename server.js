@@ -265,10 +265,11 @@ function viewAllRoles() {
 }
 
 function viewAllEmployees() {
-  const sql = `SELECT first_name, last_name, title, dept_name, salary
-  FROM employee
-  JOIN role ON employee.role_id = role.id
-  JOIN department ON employee.role_id = department.id`;
+  const sql = `SELECT E.id, E.first_name, E.last_name, R.title, D.dept_name, R.salary, M.last_name AS manager
+  FROM employee E
+  JOIN role R ON E.role_id = R.id
+  JOIN department D ON R.department_id = D.id
+  JOIN employee M ON E.manager_id = M.id`;
 
   db.query(sql, (err, rows) => {
     if (err) {

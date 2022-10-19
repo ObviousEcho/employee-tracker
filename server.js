@@ -324,7 +324,15 @@ function insertEmployee(fName, lName, role, manager) {
 }
 
 function updateEmployeeAndRole(fName, lName, role) {
-  const sql = `UPDATE employee SET role_id = (?) WHERE first_name = ${fName} AND last_name = ${lName}`;
+  let answers;
+  // const sql = `SELECT E.role_id, R.id, R.department_id
+  // FROM employee E
+  // JOIN role R ON E.role_id = R.department_id
+  // WHERE E.first_name = (?)`;
+  // const params = `${fName}`;
+  const sql = `SELECT role.department_id
+  FROM role
+  WHERE role.title = (?)`;
   const params = `${role}`;
 
   db.query(sql, params, (err, res) => {
@@ -332,6 +340,24 @@ function updateEmployeeAndRole(fName, lName, role) {
       console.log(err);
       return;
     }
+    answers = res;
+    console.log(answers);
+    console.log(`\n Employee updated successfully!`);
+    askQuestions();
+  });
+
+  let rId = answers.department_id;
+  const secondSql = `UPDATE employee
+  SET role_id = (?), manager_id = (?)
+  WHERE first_name = (?) AND  last_name = (?)`;
+  const secondParams = [rId, fName, lName];
+
+  db.query(secondSql, secondParams, (err, res) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log(res);
     console.log(`\n Employee updated successfully!`);
     askQuestions();
   });

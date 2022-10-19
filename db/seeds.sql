@@ -15,15 +15,15 @@ VALUES  ("Engineer", 150000, 1),
         ("Rep", 100000, 6);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES  ("Mallory", "Feather", 1, NULL),
+VALUES  ("Mallory", "Feather", 1, 1),
         ("Regan", "Sonderlund", 1, 1),
-        ("Alexander", "Dunfeld", 2, NULL),
+        ("Alexander", "Dunfeld", 2, 2),
         ("Myra", "Bates", 2, 2),
-        ("Duffy", "Bolinger", 3, 1),
-        ("Monique", "Reyes", 3, 2),
-        ("Elizabeth", "Smith", 4, 1),
-        ("Jessica", "Thomas", 4, 2),
-        ("Sadie", "Hill", 5, 1),
-        ("Layla", "North", 5, 2),
-        ("Marcus", "Brown", 6, 1),
-        ("Hilde", "Templeton", 6, 2);
+        ("Duffy", "Bolinger", 3, 3),
+        ("Monique", "Reyes", 3, 3),
+        ("Elizabeth", "Smith", 4, 4),
+        ("Jessica", "Thomas", 4, 4),
+        ("Sadie", "Hill", 5, NULL),
+        ("Layla", "North", 5, NULL),
+        ("Marcus", "Brown", 6, 6),
+        ("Hilde", "Templeton", 6, 6);

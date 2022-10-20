@@ -348,11 +348,10 @@ function updateEmployeeAndRole(fName, lName, role) {
 
   let rId = answers.department_id;
   const secondSql = `UPDATE employee
-  SET role_id = (?), manager_id = (?)
-  WHERE first_name = (?) AND  last_name = (?)`;
-  const secondParams = [rId, fName, lName];
+  SET role_id = "${rId}", manager_id = "${rId}"
+  WHERE first_name = "${fName}" AND  last_name = "${lName}"`;
 
-  db.query(secondSql, secondParams, (err, res) => {
+  db.query(secondSql, (err, res) => {
     if (err) {
       console.log(err);
       return;

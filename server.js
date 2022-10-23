@@ -129,22 +129,18 @@ function askQuestions() {
           break;
 
         case "Add a department":
-          console.log("add a department");
           addDepartment();
           break;
 
         case "Add a role":
-          console.log("add a role");
           addRole();
           break;
 
         case "Add an employee":
-          console.log("add an employee");
           addEmployee();
           break;
 
         case "Update an employee role":
-          console.log("update an employee");
           updateEmployee();
           break;
 
@@ -206,7 +202,6 @@ function updateEmployee() {
       console.error(err);
       return;
     }
-    console.log(res);
     const nameArray = res.map((obj) => {
       return `${obj.first_name} ${obj.last_name}`;
     });
@@ -325,11 +320,7 @@ function insertEmployee(fName, lName, role, manager) {
 
 function updateEmployeeAndRole(fName, lName, role) {
   let answers;
-  // const sql = `SELECT E.role_id, R.id, R.department_id
-  // FROM employee E
-  // JOIN role R ON E.role_id = R.department_id
-  // WHERE E.first_name = (?)`;
-  // const params = `${fName}`;
+
   const sql = `SELECT role.department_id
   FROM role
   WHERE role.title = (?)`;
@@ -340,24 +331,22 @@ function updateEmployeeAndRole(fName, lName, role) {
       console.log(err);
       return;
     }
-    answers = res;
-    console.log(answers);
-    console.log(`\n Employee updated successfully!`);
+    answers = res[0].department_id;
+    console.log(`\n Query received`);
     askQuestions();
-  });
 
-  let rId = answers.department_id;
-  const secondSql = `UPDATE employee
-  SET role_id = "${rId}", manager_id = "${rId}"
-  WHERE first_name = "${fName}" AND  last_name = "${lName}"`;
+    let rId = answers;
+    const secondSql = `UPDATE employee
+    SET role_id = ${rId}, manager_id = ${rId}
+    WHERE first_name = "${fName}" AND  last_name = "${lName}"`;
 
-  db.query(secondSql, (err, res) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    console.log(res);
-    console.log(`\n Employee updated successfully!`);
-    askQuestions();
+    db.query(secondSql, (err, res) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      console.log(`\n Employee updated successfully!`);
+      askQuestions();
+    });
   });
 }

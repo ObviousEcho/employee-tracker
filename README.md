@@ -1,6 +1,6 @@
 # employee-tracker
 
-![]()
+![screenshot of website](./assets/images/Screenshot.png)
 
 Employee-tracker is a project which would allow a manager to view employees within an orgnization, and see their name, title, salary, and who they report to, displayed in an easy to read table.
 
@@ -60,6 +60,6 @@ Please view my GitHub repo here:
  [employee-tracker](https://github.com/ObviousEcho/employee-tracker)
 
  A full video demonstration can be viewed here:
- [employee-tracker]()
+ [employee-tracker](https://drive.google.com/file/d/1_MyQY7Kt-idMGotJNEe12nclXXuvpgMa/view)
 
  Thanks!
